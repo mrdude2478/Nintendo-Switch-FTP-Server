@@ -494,17 +494,33 @@ int main(int argc, char* argv[]) {
 	if (g_led_state) {
 		turn_led_off();
 	}
-	appletSetMediaPlaybackState(false); //allow switch to go back to sleep
-	socketExit();
-	fontDestroy(sysFont);
-	fontDestroy(consFont);
-	texDestroy(top);
-	texDestroy(bot);
-	// Only cleanup FTP if it was initialized
+	appletSetMediaPlaybackState(false);
+
+	// Stop services
 	if (ftpInitialized) {
-		ftp_cleanup(&pad);  // Pass the pad parameter
+		ftp_cleanup(&pad);
 	}
-	hidExit();
+
+	hidsysExit();
+	socketExit();
+
+	// Destroy fonts
+	if (sysFont) fontDestroy(sysFont);
+	if (consFont) fontDestroy(consFont);
+
+	// Destroy textures
+	if (top) texDestroy(top);
+	if (bot) texDestroy(bot);
+	if (bg) texDestroy(bg);
+	if (bgbottom) texDestroy(bgbottom);
+	if (icon_red) texDestroy(icon_red);
+	if (icon_green) texDestroy(icon_green);
+	if (icon_white) texDestroy(icon_white);
+	if (icon_clear) texDestroy(icon_clear);
+
+	graphicsExit();
 	romfsExit();
+	hidExit();
+
 	return 0;
 }
